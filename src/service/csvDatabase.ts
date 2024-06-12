@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { parse } from 'csv-parse';
-import { promisify } from 'util';
+import { parse } from 'csv-parse/sync';
 import { CompanyRecordData } from '../utils/types';
 
 const databasePath = path.resolve(__dirname, '../../data/database.csv');
@@ -13,31 +12,35 @@ export class CSVDatabaseService {
         if (key !== "TEST_KEY") {
             throw new Error("Invalid key");
         }
-        this.loadCSVDatabase().catch(error => console.error(`Failed to load database: ${error.message}`));
-    }
+        this.loadCSVDatabase();
 
-    private async loadCSVDatabase(): Promise<void> {
-        const readFile = promisify(fs.readFile);
+    }
+    private loadCSVDatabase() {
         try {
-            const fileContent = await readFile(databasePath, 'utf8');
-            this.records = await this.parseCSV(fileContent);
+            const fileContent = fs.readFileSync(databasePath, 'utf8');
+            this.records = this.parseCSV(fileContent);
         } catch (error) {
             console.error(`Failed to load database: ${error.message}`);
             throw error;
         }
     }
 
-    private parseCSV(data: string): Promise<CompanyRecordData[]> {
-        return new Promise((resolve, reject) => {
-            const records: CompanyRecordData[] = [];
-            parse(data, { columns: true, cast: true })
-                .on('data', (row: CompanyRecordData) => records.push(row))
-                .on('end', () => resolve(records))
-                .on('error', (error: Error) => reject(error));
-        });
+    private parseCSV(data: string): CompanyRecordData[] {
+        try {
+            const records = parse(data, {
+                columns: true,
+                cast: true
+            });
+            return records;
+        } catch (error) {
+            console.error(`Failed to parse CSV: ${error.message}`);
+            throw error;
+        }
+
     }
 
     public extractData(companyName: string): CompanyRecordData | undefined {
+        console.log(this.records, companyName);
         return this.records.find(company => company["Company Name"] === companyName);
     }
 }

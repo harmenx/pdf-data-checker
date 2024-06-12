@@ -2,12 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { CSVDatabaseService } from '../../service/csvDatabase';
 import { CompanyRecordData } from '../../utils/types';
 
-describe('CSVDatabaseService Tests', () => {
+describe('csvDatabase Tests', () => {
     let service: CSVDatabaseService;
 
     beforeEach(async () => {
         service = new CSVDatabaseService("TEST_KEY");
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate async initialization
     });
 
     it('should load records during initialization', () => {
@@ -23,7 +22,7 @@ describe('CSVDatabaseService Tests', () => {
         };
 
         const result = service.extractData(companyName);
-
+        console.log(expectedData, result)
         for (const [key, value] of Object.entries(expectedData)) {
             expect(result).toHaveProperty(key, value);
         }

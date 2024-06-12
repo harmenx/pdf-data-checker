@@ -1,7 +1,7 @@
 import { CompanyPDFData } from "../../pdf-service";
 import { CompanyRecordData } from "../../utils/types";
 
-export const pdfData: CompanyPDFData = {
+export const mockPdfData: CompanyPDFData = {
   'Company Name': 'TechCorp',
   'Industry': 'Technology',
   'Market Capitalization': 5000,
@@ -22,7 +22,7 @@ export const pdfData: CompanyPDFData = {
   'Location': 'San Francisco'
 };
 
-export const companyData: CompanyRecordData = {
+export const mockCompanyData: CompanyRecordData = {
   'Company Name': 'TechCorp',
   'Industry': 'Technology',
   'Market Capitalization': 5000,

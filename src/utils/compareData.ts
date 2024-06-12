@@ -1,6 +1,13 @@
 import { CompanyPDFData } from '../pdf-service';
 import { CompanyRecordData, CompanyComparisonResult } from './types';
 
+function getAllKeys(pdfData : CompanyPDFData, companyData: CompanyRecordData) {
+    return new Set<string>([
+        ...Object.keys(pdfData),
+        ...Object.keys(companyData)
+    ]);
+}
+
 export function compareCompanyData(pdfData: CompanyPDFData, companyData: CompanyRecordData): CompanyComparisonResult {
     const comparisonResult: CompanyComparisonResult = {
         pdfData,
@@ -8,10 +15,7 @@ export function compareCompanyData(pdfData: CompanyPDFData, companyData: Company
         differences: {}
     };
 
-    const allKeys = new Set<string>([
-        ...Object.keys(pdfData),
-        ...Object.keys(companyData)
-    ]);
+    const allKeys = getAllKeys(pdfData, companyData);
 
     allKeys.forEach((key) => {
         const companyValue = companyData[key] ?? '';
